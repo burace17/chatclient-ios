@@ -8,17 +8,27 @@
 import SwiftUI
 import WebKit
 
+class WKWebViewNoAccessory: WKWebView {
+    var accessoryView: UIView?
+    override var inputAccessoryView: UIView? {
+        return accessoryView
+    }
+}
+
 struct ChatWebView : UIViewRepresentable {
+    typealias PresentSafariCallback = ((_ url: URL?) -> Void)
+    var presentSafariCallback: PresentSafariCallback
+    
     func makeCoordinator() -> Coordinator {
-        Coordinator(parent: self)
+        Coordinator(parent: self, presentSafariCallback: self.presentSafariCallback)
     }
     
-    func makeUIView(context: Context) -> WKWebView {
+    func makeUIView(context: Context) -> WKWebViewNoAccessory {
         guard let scriptPath = Bundle.main.path(forResource: "credentialManager", ofType: "js"),
               let scriptSource = try? String(contentsOfFile: scriptPath) else
         {
             print("Couldn't load bundle")
-            return WKWebView()
+            return WKWebViewNoAccessory()
         }
         
         let userScript = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
@@ -30,25 +40,30 @@ struct ChatWebView : UIViewRepresentable {
         userContentController.addScriptMessageHandler(context.coordinator, contentWorld: .page, name: "removeServerInfo")
         config.userContentController = userContentController
         
-        let webView = WKWebView(frame: .zero, configuration: config)
+        let webView = WKWebViewNoAccessory(frame: .zero, configuration: config)
         webView.uiDelegate = context.coordinator
-        return webView
-    }
-    
-    func updateUIView(_ webView: WKWebView, context: Context) {
+        
         let url = URL(string: "https://192.168.0.145:3000")!
         let request = URLRequest(url: url)
         webView.load(request)
+        
+        return webView
+    }
+    
+    func updateUIView(_ webView: WKWebViewNoAccessory, context: Context) {
+        
     }
     
     class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandlerWithReply, WKUIDelegate {
+        var presentSafariCallback: PresentSafariCallback
+        
         let parent: ChatWebView
-        init(parent: ChatWebView) {
+        init(parent: ChatWebView, presentSafariCallback: @escaping PresentSafariCallback) {
             self.parent = parent
+            self.presentSafariCallback = presentSafariCallback
         }
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
-            print("got a message from JS. name: " + message.name)
             var response: Any? = nil;
 
             if message.name == "getStoredServers" {
@@ -74,9 +89,9 @@ struct ChatWebView : UIViewRepresentable {
             replyHandler(response, nil)
         }
         
-        func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
-            print("JS alert: " + message)
-            completionHandler()
+        func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+            self.presentSafariCallback(navigationAction.request.url)
+            return nil
         }
     }
 }
