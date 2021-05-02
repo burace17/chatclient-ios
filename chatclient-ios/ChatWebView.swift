@@ -25,7 +25,9 @@ struct ChatWebView : UIViewRepresentable {
         let config = WKWebViewConfiguration()
         let userContentController = WKUserContentController()
         userContentController.addUserScript(userScript)
-        userContentController.addScriptMessageHandler(context.coordinator, contentWorld: .page, name: "credentialManager")
+        userContentController.addScriptMessageHandler(context.coordinator, contentWorld: .page, name: "getStoredServers")
+        userContentController.addScriptMessageHandler(context.coordinator, contentWorld: .page, name: "storeServerInfo")
+        userContentController.addScriptMessageHandler(context.coordinator, contentWorld: .page, name: "removeServerInfo")
         config.userContentController = userContentController
         
         let webView = WKWebView(frame: .zero, configuration: config)
@@ -46,9 +48,30 @@ struct ChatWebView : UIViewRepresentable {
         }
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
-            print("got a message from JS")
-            print(message.body)
-            replyHandler("hello world", nil)
+            print("got a message from JS. name: " + message.name)
+            var response: Any? = nil;
+
+            if message.name == "getStoredServers" {
+                response = Keychain.readCredentials()
+            }
+            else if message.name == "storeServerInfo" {
+                if let info = message.body as? Array<String> {
+                    response = Keychain.addServer(info[0], withUsername: info[1], andPassword: info[2])
+                }
+                else {
+                    response = false
+                }
+            }
+            else if message.name == "removeServerInfo" {
+                if let info = message.body as? Array<String> {
+                    response = Keychain.removeConnection(from: info[0], withUsername: info[1])
+                }
+                else {
+                    response = false
+                }
+            }
+
+            replyHandler(response, nil)
         }
         
         func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {

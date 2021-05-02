@@ -15,6 +15,7 @@
 		7598F780263E110A0056FE63 /* chatclient_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7598F77F263E110A0056FE63 /* chatclient_iosUITests.swift */; };
 		7598F791263E12050056FE63 /* ChatWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7598F790263E12050056FE63 /* ChatWebView.swift */; };
 		75E41B77263E42D500F2FA66 /* credentialManager.js in Resources */ = {isa = PBXBuildFile; fileRef = 75E41B76263E42D500F2FA66 /* credentialManager.js */; };
+		75E41B87263E47B600F2FA66 /* Keychain.mm in Sources */ = {isa = PBXBuildFile; fileRef = 75E41B85263E47B500F2FA66 /* Keychain.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,9 @@
 		7598F781263E110A0056FE63 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7598F790263E12050056FE63 /* ChatWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWebView.swift; sourceTree = "<group>"; };
 		75E41B76263E42D500F2FA66 /* credentialManager.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = credentialManager.js; sourceTree = "<group>"; };
+		75E41B84263E47B400F2FA66 /* chatclient-ios-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "chatclient-ios-Bridging-Header.h"; sourceTree = "<group>"; };
+		75E41B85263E47B500F2FA66 /* Keychain.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Keychain.mm; sourceTree = "<group>"; };
+		75E41B86263E47B500F2FA66 /* Keychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keychain.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +103,8 @@
 		7598F761263E11070056FE63 /* chatclient-ios */ = {
 			isa = PBXGroup;
 			children = (
+				75E41B86263E47B500F2FA66 /* Keychain.h */,
+				75E41B85263E47B500F2FA66 /* Keychain.mm */,
 				7598F762263E11070056FE63 /* ChatClient.swift */,
 				7598F764263E11070056FE63 /* ContentView.swift */,
 				7598F766263E110A0056FE63 /* Assets.xcassets */,
@@ -106,6 +112,7 @@
 				7598F76B263E110A0056FE63 /* Info.plist */,
 				7598F768263E110A0056FE63 /* Preview Content */,
 				7598F790263E12050056FE63 /* ChatWebView.swift */,
+				75E41B84263E47B400F2FA66 /* chatclient-ios-Bridging-Header.h */,
 			);
 			path = "chatclient-ios";
 			sourceTree = "<group>";
@@ -203,6 +210,7 @@
 				TargetAttributes = {
 					7598F75E263E11070056FE63 = {
 						CreatedOnToolsVersion = 12.4;
+						LastSwiftMigration = 1240;
 					};
 					7598F76F263E110A0056FE63 = {
 						CreatedOnToolsVersion = 12.4;
@@ -269,6 +277,7 @@
 				7598F791263E12050056FE63 /* ChatWebView.swift in Sources */,
 				7598F765263E11070056FE63 /* ContentView.swift in Sources */,
 				7598F763263E11070056FE63 /* ChatClient.swift in Sources */,
+				75E41B87263E47B600F2FA66 /* Keychain.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,6 +434,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"chatclient-ios/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
@@ -436,6 +446,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.burace17.chatclient-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "chatclient-ios/chatclient-ios-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -446,6 +458,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"chatclient-ios/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
@@ -457,6 +470,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.burace17.chatclient-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "chatclient-ios/chatclient-ios-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
